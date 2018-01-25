@@ -1,0 +1,22 @@
+version: '2'
+services:
+    21points-app:
+        image: 21points
+        environment:
+            - SPRING_PROFILES_ACTIVE=prod,swagger
+            - EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE=http://admin:$${jhipster.registry.password}@jhipster-registry:8761/eureka
+            - SPRING_CLOUD_CONFIG_URI=http://admin:$${jhipster.registry.password}@jhipster-registry:8761/config
+            - SPRING_DATASOURCE_URL=jdbc:postgresql://21points-postgresql:5432/21points
+            - JHIPSTER_SLEEP=30 # gives time for the JHipster Registry to boot before the application
+        ports:
+            - 8080:8080
+    21points-postgresql:
+        extends:
+            file: postgresql.yml
+            service: 21points-postgresql
+    jhipster-registry:
+        extends:
+            file: jhipster-registry.yml
+            service: jhipster-registry
+        environment:
+            - SPRING_CLOUD_CONFIG_SERVER_NATIVE_SEARCH_LOCATIONS=file:./central-config/docker-config/
